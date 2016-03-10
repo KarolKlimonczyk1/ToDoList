@@ -1,11 +1,12 @@
 package com.karol.todolist;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by student on 2016-03-10.
  */
-public class ToDoItem {
+public class ToDoItem implements Serializable{
 
     String content;
     Date date;

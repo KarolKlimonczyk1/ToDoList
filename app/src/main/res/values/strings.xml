@@ -3,4 +3,15 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="new_task">New task</string>
+    <string name="title_activity_new_item">NewItem</string>
+
+
+    <!--add item activity-->
+    <string name="high_priority">Hight priority</string>
+    <string name="medium_priority">Medium priority</string>
+    <string name="low_priority">Low priority</string>
+    <string name="add_task">Add task</string>
+    <string name="set_title">Set title</string>
+
 </resources>

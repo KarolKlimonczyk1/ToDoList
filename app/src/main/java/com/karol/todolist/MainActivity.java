@@ -2,11 +2,13 @@ package com.karol.todolist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,14 +22,16 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     List<ToDoItem> todoList;
+    ListOperations list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        createList();
-        createSwipeAnimations();
+        list=new ListOperations(this);
+        list.createList();
+        list.createSwipeAnimations();
     }
 
     @Override
@@ -53,62 +57,23 @@ public class MainActivity extends Activity {
     }
 
 
-    private void createList(){
+//    odbieranie z drugiego activity
 
-        RecyclerView rv=(RecyclerView)findViewById(R.id.rv);
-
-        LinearLayoutManager llm=new LinearLayoutManager(MainActivity.this);
-        rv.setLayoutManager(llm);
-
-        todoList=new ArrayList<ToDoItem>();
-       todoList.add(new ToDoItem("first", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("as", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("das", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("asd", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("asdas", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("fff", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("affgsd", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("adfgs", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("dhhas", new Date(), R.drawable.icon));
-        todoList.add(new ToDoItem("afhgsd", new Date(), R.drawable.icon));
-
-
-        ToDoAdapter adapter=new ToDoAdapter(todoList);
-
-        rv.setAdapter(adapter);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+       if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                ToDoItem tdi= (ToDoItem) data.getSerializableExtra("itemHandler");
+                list.addNewItem(tdi);
+            }
+        }
     }
 
 
-    public void createSwipeAnimations(){
-        final RecyclerView rv=(RecyclerView)findViewById(R.id.rv);
-
-        ItemTouchHelper.SimpleCallback simpleCallback= new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT){
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder1) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-                if(direction==ItemTouchHelper.LEFT){
-                    ToDoViewHolder vh=(ToDoViewHolder)viewHolder;
-                    ToDoAdapter adapter=(ToDoAdapter)rv.getAdapter();
-                    int position=vh.getAdapterPosition();
-                    int idColor= ContextCompat.getColor(MainActivity.this, R.color.darkgreen);
-                    vh.todoLayout.setBackgroundColor(idColor);
-                    adapter.notifyItemChanged(position);
-                }
-                else if (direction==ItemTouchHelper.RIGHT){
-                    ToDoAdapter adapter=(ToDoAdapter)rv.getAdapter();
-                    int position=viewHolder.getAdapterPosition();
-                    adapter.onItemDismiss(position);
-                }
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(rv);
-
+// zmienia activity na drugiem, wktoreym dodaje sie nowe zadanie
+    public void addItem(MenuItem item) {
+        Intent myIntent = new Intent(MainActivity.this, NewItem.class);
+        startActivityForResult(myIntent, 1);
     }
 }

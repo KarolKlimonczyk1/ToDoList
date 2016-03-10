@@ -6,13 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
  * Created by student on 2016-03-10.
  */
-public class ToDoAdapter extends RecyclerView.Adapter<ToDoViewHolder> {
+public class ToDoAdapter extends RecyclerView.Adapter<ToDoViewHolder> implements Serializable {
 
     List<ToDoItem> items;
 
